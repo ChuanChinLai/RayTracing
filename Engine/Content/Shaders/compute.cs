@@ -13,14 +13,6 @@ uint g_state = 0;
 #define MATERIAL_DIELECTRIC 2
 
 
-struct Camera
-{
-	vec3 Position;
-	vec3 LowerLeftCorner;
-	vec3 Horizontal;
-	vec3 Vertical;
-};
-
 struct Ray
 {
     vec3 Origin;
@@ -72,9 +64,9 @@ struct Scene
 };
 
 
-uniform Camera camera;
 uniform int numFrames;
-
+uniform mat4 inverseViewMat;
+uniform mat4 inverseProjectedMat;
 
 uint rand(inout uint state)
 {
@@ -140,9 +132,24 @@ float Schlick(float cosine, float ref_idx)
 
 Ray GetRay(float u, float v)
 {
+    u = u * 2.0 - 1.0;
+    v = v * 2.0 - 1.0;
+	
+	vec4 clip_pos = vec4(u, v, -1.0, 1.0);
+    vec4 view_pos = inverseProjectedMat * clip_pos;
+	
+	vec3 dir = vec3(inverseViewMat * vec4(view_pos.x, view_pos.y, -1.0, 0.0));
+    dir = normalize(dir);
+	
+	vec4 origin = inverseViewMat * vec4(0.0, 0.0, 0.0, 1.0);
+    origin.xyz /= origin.w;
+	
+	
+	
 	Ray ray; 
-	ray.Origin = camera.Position;
-	ray.Direction = normalize(camera.LowerLeftCorner + u * camera.Horizontal + v * camera.Vertical);
+
+	ray.Origin = origin.xyz; 
+	ray.Direction = dir;
 	
 	return ray;
 }
@@ -296,7 +303,7 @@ vec3 GetColor(Ray ray, in Scene scene)
 	vec3 attenuation = vec3(0.0, 0.0, 0.0);
 	
 
-	while(depth < 5)
+	while(depth < 50)
 	{
 		if(HitTheScene(ray, 0.001f, 10000.0f, scene, rec))
 		{
@@ -428,7 +435,7 @@ void main ()
 	
 	vec3 color = vec3 (0.0);
 	
-	int ns = 10;
+	int ns = 30;
 	
 	for(int i = 0; i < ns; i++)
 	{
@@ -444,9 +451,8 @@ void main ()
 	
 	color = vec3(sqrt(color.x), sqrt(color.y), sqrt(color.z));
 	
-
 	vec3 prev_color = imageLoad(img_output, pixel_coords).rgb;
 	vec3 final = mix(color, prev_color, float(numFrames) / float(numFrames + 1));
 	
-	imageStore (img_output, pixel_coords, vec4(final, 1.0f));                          
+	imageStore (img_output, pixel_coords, vec4(color, 1.0f));                          
 };

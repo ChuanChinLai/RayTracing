@@ -2,7 +2,7 @@
 
 #include <Engine/Math/Matrix.h>
 
-LaiEngine::Camera::Camera() : LowerLeftCorner(-2.0f, -2.0f, -1.0f), Horizontal(4.0f, 0.0f, 0.0f), Vertical(0.0f, 4.0f, 0.0f)
+LaiEngine::Camera::Camera()
 {
 	Position = glm::vec3(0, 0, 5);
 	m_ProjectedMatrix = MakeProjectionMatrix();
@@ -31,5 +31,5 @@ const glm::mat4& LaiEngine::Camera::GetProjectedViewMatrix() const noexcept
 
 LaiEngine::Ray LaiEngine::Camera::GetRay(float u, float v)
 {
-	return Ray(Position, LowerLeftCorner + u * Horizontal + v * Vertical);
+	return Ray();
 }

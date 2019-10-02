@@ -9,7 +9,7 @@ namespace LaiEngine
 	struct sVertex
 	{
 		glm::vec3 Position;
-		glm::vec3 Color;
+		//glm::vec3 Color;
 		float u; 
 		float v;
 	};

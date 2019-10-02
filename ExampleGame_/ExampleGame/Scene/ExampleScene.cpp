@@ -20,7 +20,7 @@
 
 GLuint textureColorbuffer = 0;
 
-int tex_w = 1000, tex_h = 1000;
+int tex_w = 800, tex_h = 800;
 
 LaiEngine::ExampleScene::ExampleScene(const SceneManager & sceneManager) : IGameScene(sceneManager)
 {
@@ -36,14 +36,6 @@ void LaiEngine::ExampleScene::Init()
 {
 	Mesh mesh = Plane();
 	mModel.Init(mesh);
-
-	mComputeShader.UseProgram();
-	mComputeShader.SetCameraPosition(mCamera.Position);
-	mComputeShader.SetCameraLowerLeftCorner(mCamera.LowerLeftCorner);
-	mComputeShader.SetCameraHorizontal(mCamera.Horizontal);
-	mComputeShader.SetCameraVertical(mCamera.Vertical);
-
-
 
 	{ // create the texture
 		glGenTextures(1, &textureColorbuffer);
@@ -84,7 +76,7 @@ void LaiEngine::ExampleScene::Init()
 void LaiEngine::ExampleScene::Update(const float dt)
 {
 	mCamera.Position += mCamera.Velocity * dt;
-	mCamera.Velocity *= 0.95f;
+	mCamera.Velocity *= 0.9f;
 
 	mCamera.Update();
 
@@ -94,8 +86,11 @@ void LaiEngine::ExampleScene::Update(const float dt)
 		mNumFrames = 0;
 	}
 
-	//mComputeShader.UseProgram();
-	//mComputeShader.SetNumFrames(mNumFrames);
+	mComputeShader.UseProgram();
+	mComputeShader.SetNumFrames(mNumFrames);
+	mComputeShader.SetInverseViewMat(glm::inverse(mCamera.GetViewMatrix()));
+	mComputeShader.SetInverseProjectedMat(glm::inverse(mCamera.GetProjectedMatrix()));
+
 
 	std::cout << mCamera.Position.x << std::endl;
 
@@ -117,7 +112,6 @@ void LaiEngine::ExampleScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	mComputeShader.UseProgram();
-	mComputeShader.SetCameraPosition(mCamera.Position);
 	glDispatchCompute((GLuint)tex_w, (GLuint)tex_h, 1);
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
@@ -132,8 +126,6 @@ void LaiEngine::ExampleScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 
 	const GLsizei numElements = static_cast<GLsizei>(mModel.GetIndexCount());
 	glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_INT, nullptr);
-
-
 }
 
 void LaiEngine::ExampleScene::InputProcess(std::weak_ptr<sf::RenderWindow> window, sf::Event & event)

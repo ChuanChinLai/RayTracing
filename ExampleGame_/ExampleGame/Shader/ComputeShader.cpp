@@ -18,45 +18,27 @@ LaiEngine::ComputeShader::ComputeShader()
 	GetUniforms();
 }
 
-void LaiEngine::ComputeShader::SetRandomSeed(const int seed)
-{
-	SetUniformValue(m_locationRandomSeed, seed);
-}
-
 void LaiEngine::ComputeShader::SetNumFrames(const int num)
 {
 	SetUniformValue(m_locationNumFrames, num);
 }
 
-void LaiEngine::ComputeShader::SetCameraPosition(const glm::vec3 & pos)
+void LaiEngine::ComputeShader::SetInverseViewMat(const glm::mat4 & matrix)
 {
-	SetUniformValue(m_locationCameraPosition, pos);
+	SetUniformValue(m_locationInverseViewMat, matrix);
 }
 
-void LaiEngine::ComputeShader::SetCameraLowerLeftCorner(const glm::vec3 & v)
+void LaiEngine::ComputeShader::SetInverseProjectedMat(const glm::mat4 & matrix)
 {
-	SetUniformValue(m_locationCameraLowerLeftCorner, v);
-}
-
-void LaiEngine::ComputeShader::SetCameraHorizontal(const glm::vec3 & v)
-{
-	SetUniformValue(m_locationCameraHorizontal, v);
-}
-
-void LaiEngine::ComputeShader::SetCameraVertical(const glm::vec3 & v)
-{
-	SetUniformValue(m_locationCameraVertical, v);
+	SetUniformValue(m_locationInverseProjectedMat, matrix);
 }
 
 void LaiEngine::ComputeShader::GetUniforms()
 {
 	UseProgram();
 
-	m_locationRandomSeed = glGetUniformLocation(m_programId, "randomSeed");
-	m_locationNumFrames = glGetUniformLocation(m_programId, "numFrames");
+	m_locationInverseViewMat = glGetUniformLocation(m_programId, "inverseViewMat");
+	m_locationInverseProjectedMat = glGetUniformLocation(m_programId, "inverseProjectedMat");
 
-	m_locationCameraPosition = glGetUniformLocation(m_programId, "camera.Position");
-	m_locationCameraLowerLeftCorner = glGetUniformLocation(m_programId, "camera.LowerLeftCorner");
-	m_locationCameraHorizontal = glGetUniformLocation(m_programId, "camera.Horizontal");
-	m_locationCameraVertical = glGetUniformLocation(m_programId, "camera.Vertical");
+	m_locationNumFrames = glGetUniformLocation(m_programId, "numFrames");
 }

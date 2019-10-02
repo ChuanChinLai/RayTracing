@@ -125,36 +125,36 @@ void LaiEngine::Model::CreateVBO(const std::vector<sVertex>& vertices)
 			}
 
 			//r g b
-			{
-				constexpr GLuint vertexElementLocation = 1;
-				constexpr GLint elementCount = 3;
-				constexpr GLboolean notNormalized = GL_FALSE;
-				GLvoid* offset = reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat));
-				glVertexAttribPointer(vertexElementLocation, elementCount, GL_FLOAT, notNormalized, stride, offset);
-				const auto errorCode = glGetError();
+			//{
+			//	constexpr GLuint vertexElementLocation = 1;
+			//	constexpr GLint elementCount = 3;
+			//	constexpr GLboolean notNormalized = GL_FALSE;
+			//	GLvoid* offset = reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat));
+			//	glVertexAttribPointer(vertexElementLocation, elementCount, GL_FLOAT, notNormalized, stride, offset);
+			//	const auto errorCode = glGetError();
 
-				if (errorCode == GL_NO_ERROR)
-				{
-					glEnableVertexAttribArray(vertexElementLocation);
-					const GLenum errorCode = glGetError();
-					if (errorCode != GL_NO_ERROR)
-					{
-						std::string message = "OpenGL failed to enable the RGB vertex attribute at location: " + vertexElementLocation;
-						throw std::runtime_error(message.c_str());
-					}
-				}
-				else
-				{
-					throw std::runtime_error("OpenGL failed to set the RGB vertex attribute at location: " + vertexElementLocation);
-				}
-			}
+			//	if (errorCode == GL_NO_ERROR)
+			//	{
+			//		glEnableVertexAttribArray(vertexElementLocation);
+			//		const GLenum errorCode = glGetError();
+			//		if (errorCode != GL_NO_ERROR)
+			//		{
+			//			std::string message = "OpenGL failed to enable the RGB vertex attribute at location: " + vertexElementLocation;
+			//			throw std::runtime_error(message.c_str());
+			//		}
+			//	}
+			//	else
+			//	{
+			//		throw std::runtime_error("OpenGL failed to set the RGB vertex attribute at location: " + vertexElementLocation);
+			//	}
+			//}
 
 			//uv
 			{
-				constexpr GLuint vertexElementLocation = 2;
+				constexpr GLuint vertexElementLocation = 1;
 				constexpr GLint elementCount = 2;
 				constexpr GLboolean notNormalized = GL_FALSE;
-				GLvoid* offset = reinterpret_cast<GLvoid*>(6 * sizeof(GLfloat));
+				GLvoid* offset = reinterpret_cast<GLvoid*>(3 * sizeof(GLfloat));
 				glVertexAttribPointer(vertexElementLocation, elementCount, GL_FLOAT, notNormalized, stride, offset);
 				const auto errorCode = glGetError();
 
