@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{C5251DE0-F953-47FF-973B-92C9E2E2023C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>ExampleGame</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\Engine\EngineDefaults.props" />
+    <Import Project="..\ExampleGame.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\Engine\EngineDefaults.props" />
+    <Import Project="..\ExampleGame.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\Engine\EngineDefaults.props" />
+    <Import Project="..\ExampleGame.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\Engine\EngineDefaults.props" />
+    <Import Project="..\ExampleGame.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)ExampleGame_\ExampleGame;$(SolutionDir)External\SFML\include;$(SolutionDir)External\glad\include;$(SolutionDir)External;$(SolutionDir)External\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>opengl32.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;Engine.lib;legacy_stdio_definitions.lib;glew32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)temp\$(PlatformTarget)\$(Configuration)\output\;$(SolutionDir)External\SFML\lib\$(PlatformTarget)\;$(SolutionDir)External\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(GameName) Executable</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)ExampleGame_\ExampleGame;$(SolutionDir)External\SFML\include;$(SolutionDir)External\glad\include;$(SolutionDir)External;$(SolutionDir)External\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>opengl32.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;Engine.lib;legacy_stdio_definitions.lib;glew32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)temp\$(PlatformTarget)\$(Configuration)\output\;$(SolutionDir)External\SFML\lib\$(PlatformTarget)\;$(SolutionDir)External\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(GameName) Executable</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)ExampleGame_\ExampleGame;$(SolutionDir)External\SFML\include;$(SolutionDir)External\glad\include;$(SolutionDir)External;$(SolutionDir)External\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>opengl32.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;Engine.lib;legacy_stdio_definitions.lib;glew32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)temp\$(PlatformTarget)\$(Configuration)\output\;$(SolutionDir)External\SFML\lib\$(PlatformTarget)\;$(SolutionDir)External\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(GameName) Executable</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Engine;$(SolutionDir)ExampleGame_\ExampleGame;$(SolutionDir)External\SFML\include;$(SolutionDir)External\glad\include;$(SolutionDir)External;$(SolutionDir)External\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>opengl32.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;Engine.lib;legacy_stdio_definitions.lib;glew32d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)temp\$(PlatformTarget)\$(Configuration)\output\;$(SolutionDir)External\SFML\lib\$(PlatformTarget)\;$(SolutionDir)External\glew-2.1.0\lib\$(Configuration)\$(PlatformTarget)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <CustomBuildStep>
+      <Command>copy "$(TargetPath)" "$(GameInstallDir)$(TargetFileName)" /y</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>Copying $(GameName) Executable</Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>$(GameInstallDir)$(TargetFileName)</Outputs>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Inputs>$(TargetPath)</Inputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Core\Camera.cpp" />
+    <ClCompile Include="Core\GameEngine.cpp" />
+    <ClCompile Include="Core\Ray.cpp" />
+    <ClCompile Include="Core\Utility.cpp" />
+    <ClCompile Include="GameObject\GameObject.cpp" />
+    <ClCompile Include="GameObject\Sphere.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material\Material.cpp" />
+    <ClCompile Include="Scene\ExampleScene.cpp" />
+    <ClCompile Include="Shader\BasicShader.cpp" />
+    <ClCompile Include="Shader\ComputeShader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\Camera.h" />
+    <ClInclude Include="Core\GameEngine.h" />
+    <ClInclude Include="Core\Ray.h" />
+    <ClInclude Include="Core\Utility.h" />
+    <ClInclude Include="GameObject\GameObject.h" />
+    <ClInclude Include="GameObject\Sphere.h" />
+    <ClInclude Include="Material\Material.h" />
+    <ClInclude Include="Scene\ExampleScene.h" />
+    <ClInclude Include="Shader\BasicShader.h" />
+    <ClInclude Include="Shader\ComputeShader.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

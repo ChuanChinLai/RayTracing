@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Core\GameEngine.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\ExampleScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Ray.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\Sphere.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Utility.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject\GameObject.cpp">
+      <Filter>GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Camera.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Material\Material.cpp">
+      <Filter>Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\BasicShader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ComputeShader.cpp">
+      <Filter>Shader</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{363956e3-a145-4347-b569-958ee3b8d09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{98252e76-19d6-4afb-bb09-0d4153843077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameObject">
+      <UniqueIdentifier>{d0abb3ad-02ca-4099-8b7e-1b9472caee60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Material">
+      <UniqueIdentifier>{e23e4865-1bf1-4bff-8247-845d72bb8c9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{f2bf6b56-9240-4618-b779-1c1085d26527}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Core\GameEngine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\ExampleScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\GameObject.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Material\Material.h">
+      <Filter>Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Ray.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject\Sphere.h">
+      <Filter>GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Utility.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Camera.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\BasicShader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ComputeShader.h">
+      <Filter>Shader</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
