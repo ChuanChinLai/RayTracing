@@ -18,9 +18,16 @@
 #include <random>
 
 
+std::ostream& operator<<(std::ostream& os, const glm::vec3& v)
+{
+	os << v.x << '/' << v.y << '/' << v.z;
+	return os;
+}
+
+
 GLuint textureColorbuffer = 0;
 
-int tex_w = 800, tex_h = 800;
+int tex_w = 400, tex_h = 400;
 
 LaiEngine::ExampleScene::ExampleScene(const SceneManager & sceneManager) : IGameScene(sceneManager)
 {
@@ -92,7 +99,7 @@ void LaiEngine::ExampleScene::Update(const float dt)
 	mComputeShader.SetInverseProjectedMat(glm::inverse(mCamera.GetProjectedMatrix()));
 
 
-	std::cout << mCamera.Position.x << std::endl;
+	std::cout << mCameraMoved << " " << mNumFrames << std::endl;
 
 	mNumFrames++;
 
@@ -132,16 +139,6 @@ void LaiEngine::ExampleScene::InputProcess(std::weak_ptr<sf::RenderWindow> windo
 {
 	keyboardInput(window);
 	MouseInput(window);
-
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-	{
-		mCameraMoved = true;
-	}
-	else
-	{
-		mCameraMoved = false;
-	}
 }
 
 void LaiEngine::ExampleScene::Test()
@@ -235,6 +232,12 @@ void LaiEngine::ExampleScene::keyboardInput(std::weak_ptr<sf::RenderWindow> wind
 		dv.z = -glm::sin(glm::radians(mCamera.Rotation.y)) * speed;
 	}
 
+	if (glm::length(dv) > 0.0f)
+	{
+		mCameraMoved = true;
+	}
+
+
 	mCamera.Velocity += dv;
 }
 
@@ -243,6 +246,8 @@ void LaiEngine::ExampleScene::MouseInput(std::weak_ptr<sf::RenderWindow> window)
 	static auto const BOUND = 80;
 	static auto lastMousePosition = sf::Mouse::getPosition(*window.lock());
 	auto change = sf::Mouse::getPosition() - lastMousePosition;
+
+	mCameraMoved = (change.x == 0 && change.y == 0 && mCameraMoved == false) ? false : true;
 
 	mCamera.Rotation.y += static_cast<float>(change.x * 0.05);
 	mCamera.Rotation.x += static_cast<float>(change.y * 0.05);
