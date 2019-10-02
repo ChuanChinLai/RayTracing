@@ -36,7 +36,6 @@ void LaiEngine::ExampleScene::Init()
 {
 	Mesh mesh = Plane();
 	mModel.Init(mesh);
-	mScreen.Init(mesh);
 
 	mComputeShader.UseProgram();
 	mComputeShader.SetCameraPosition(mCamera.Position);
@@ -95,12 +94,10 @@ void LaiEngine::ExampleScene::Update(const float dt)
 		mNumFrames = 0;
 	}
 
-
-	mComputeShader.SetNumFrames(mNumFrames);
+	//mComputeShader.UseProgram();
+	//mComputeShader.SetNumFrames(mNumFrames);
 
 	std::cout << mCamera.Position.x << std::endl;
-
-
 
 	mNumFrames++;
 
@@ -116,9 +113,8 @@ void LaiEngine::ExampleScene::Release()
 void LaiEngine::ExampleScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, tex_w, tex_h);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 	mComputeShader.UseProgram();
 	mComputeShader.SetCameraPosition(mCamera.Position);
@@ -129,7 +125,6 @@ void LaiEngine::ExampleScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 	mShader.SetViewMat(glm::mat4(1.0f));
 	mShader.SetProjectedMat(glm::mat4(1.0f));
 
-
 	mModel.BindVAO();
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
@@ -137,7 +132,8 @@ void LaiEngine::ExampleScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 
 	const GLsizei numElements = static_cast<GLsizei>(mModel.GetIndexCount());
 	glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
+
+
 }
 
 void LaiEngine::ExampleScene::InputProcess(std::weak_ptr<sf::RenderWindow> window, sf::Event & event)

@@ -33,8 +33,6 @@ namespace LaiEngine
 
 
 		Model mModel;
-		Model mScreen;
-
 		Camera mCamera;
 
 		BasicShader mShader;
