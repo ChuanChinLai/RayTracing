@@ -23,6 +23,11 @@ void LaiEngine::ComputeShader::SetNumFrames(const int num)
 	SetUniformValue(m_locationNumFrames, num);
 }
 
+void LaiEngine::ComputeShader::SetGetInputs(const int num)
+{
+	SetUniformValue(m_locationGetInputs, num);
+}
+
 void LaiEngine::ComputeShader::SetInverseViewMat(const glm::mat4 & matrix)
 {
 	SetUniformValue(m_locationInverseViewMat, matrix);
@@ -37,8 +42,10 @@ void LaiEngine::ComputeShader::GetUniforms()
 {
 	UseProgram();
 
+	m_locationNumFrames = glGetUniformLocation(m_programId, "numFrames");
+	m_locationGetInputs = glGetUniformLocation(m_programId, "getInputs");
+
 	m_locationInverseViewMat = glGetUniformLocation(m_programId, "inverseViewMat");
 	m_locationInverseProjectedMat = glGetUniformLocation(m_programId, "inverseProjectedMat");
 
-	m_locationNumFrames = glGetUniformLocation(m_programId, "numFrames");
 }

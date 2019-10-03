@@ -31,9 +31,18 @@ void LaiEngine::Engine::GameLoop()
 {
 	mIsGameRunning = mRenderWindow->isOpen();
 
+	sf::Clock clock;
+	sf::Time accumulator = sf::Time::Zero;
+	sf::Time ups = sf::seconds(1.f / 60.f);
+
+
 	while (mIsGameRunning)
 	{
-		mSceneManager->Update(0.01f);
+		while (accumulator > ups)
+		{
+			mSceneManager->Update(ups.asSeconds());
+			accumulator -= ups;
+		}
 
 		sf::Event event;
 		mSceneManager->InputProcess(mRenderWindow, event);
@@ -43,6 +52,8 @@ void LaiEngine::Engine::GameLoop()
 		mRenderWindow->display();
 
 		HandleEvents(event);
+
+		accumulator += clock.restart();
 	}
 }
 

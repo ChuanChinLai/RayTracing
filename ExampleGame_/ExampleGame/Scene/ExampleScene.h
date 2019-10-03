@@ -28,8 +28,8 @@ namespace LaiEngine
 
 		void Test();
 
-		void keyboardInput(std::weak_ptr<sf::RenderWindow> window);
-		void MouseInput(std::weak_ptr<sf::RenderWindow> window);
+		bool KeyboardInput(std::weak_ptr<sf::RenderWindow> window);
+		bool MouseInput(std::weak_ptr<sf::RenderWindow> window);
 
 
 		Model mModel;
@@ -39,7 +39,7 @@ namespace LaiEngine
 		ComputeShader mComputeShader;
 
 		int mNumFrames = 0;
-		bool mCameraMoved = false;
+		bool mGetInputs = false;
 
 	};
 }

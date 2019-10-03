@@ -8,8 +8,11 @@ LaiEngine::Camera::Camera()
 	m_ProjectedMatrix = MakeProjectionMatrix();
 }
 
-void LaiEngine::Camera::Update()
+void LaiEngine::Camera::Update(float dt)
 {
+	Position += Velocity * dt;
+	Velocity *= 0.85f;
+
 	m_ViewMatrix = MakeViewMatrix(Position, Rotation);
 }
 

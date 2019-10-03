@@ -27,7 +27,7 @@ std::ostream& operator<<(std::ostream& os, const glm::vec3& v)
 
 GLuint textureColorbuffer = 0;
 
-int tex_w = 400, tex_h = 400;
+int tex_w = 800, tex_h = 800;
 
 LaiEngine::ExampleScene::ExampleScene(const SceneManager & sceneManager) : IGameScene(sceneManager)
 {
@@ -82,28 +82,25 @@ void LaiEngine::ExampleScene::Init()
 
 void LaiEngine::ExampleScene::Update(const float dt)
 {
-	mCamera.Position += mCamera.Velocity * dt;
-	mCamera.Velocity *= 0.9f;
+	mCamera.Update(dt);
 
-	mCamera.Update();
+	mComputeShader.UseProgram();
+	mComputeShader.SetNumFrames(mNumFrames);
+	mComputeShader.SetGetInputs(mGetInputs);
 
+	mComputeShader.SetInverseViewMat(glm::inverse(mCamera.GetViewMatrix()));
+	mComputeShader.SetInverseProjectedMat(glm::inverse(mCamera.GetProjectedMatrix()));
 
-	if (mCameraMoved)
+	if (mGetInputs)
 	{
 		mNumFrames = 0;
 	}
 
-	mComputeShader.UseProgram();
-	mComputeShader.SetNumFrames(mNumFrames);
-	mComputeShader.SetInverseViewMat(glm::inverse(mCamera.GetViewMatrix()));
-	mComputeShader.SetInverseProjectedMat(glm::inverse(mCamera.GetProjectedMatrix()));
+	//std::cout << mGetInputs << " " << mNumFrames << std::endl;
 
-
-	std::cout << mCameraMoved << " " << mNumFrames << std::endl;
+	mGetInputs = false;
 
 	mNumFrames++;
-
-	mCameraMoved = false;
 }
 
 
@@ -123,13 +120,10 @@ void LaiEngine::ExampleScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 	glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
 	mShader.UseProgram();
-	mShader.SetViewMat(glm::mat4(1.0f));
-	mShader.SetProjectedMat(glm::mat4(1.0f));
+	//mShader.SetViewMat(glm::mat4(1.0f));
+	//mShader.SetProjectedMat(glm::mat4(1.0f));
 
 	mModel.BindVAO();
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
-
 
 	const GLsizei numElements = static_cast<GLsizei>(mModel.GetIndexCount());
 	glDrawElements(GL_TRIANGLES, numElements, GL_UNSIGNED_INT, nullptr);
@@ -137,7 +131,7 @@ void LaiEngine::ExampleScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 
 void LaiEngine::ExampleScene::InputProcess(std::weak_ptr<sf::RenderWindow> window, sf::Event & event)
 {
-	keyboardInput(window);
+	KeyboardInput(window); 
 	MouseInput(window);
 }
 
@@ -206,7 +200,7 @@ void LaiEngine::ExampleScene::Test()
 	//std::cout << "Rendering Time: " << duration << '\n';
 }
 
-void LaiEngine::ExampleScene::keyboardInput(std::weak_ptr<sf::RenderWindow> window)
+bool LaiEngine::ExampleScene::KeyboardInput(std::weak_ptr<sf::RenderWindow> window)
 {
 	glm::vec3 dv;
 	float speed = 0.5f;
@@ -234,20 +228,19 @@ void LaiEngine::ExampleScene::keyboardInput(std::weak_ptr<sf::RenderWindow> wind
 
 	if (glm::length(dv) > 0.0f)
 	{
-		mCameraMoved = true;
+		mGetInputs = true;
 	}
 
-
 	mCamera.Velocity += dv;
+
+	return mGetInputs;
 }
 
-void LaiEngine::ExampleScene::MouseInput(std::weak_ptr<sf::RenderWindow> window)
+bool LaiEngine::ExampleScene::MouseInput(std::weak_ptr<sf::RenderWindow> window)
 {
 	static auto const BOUND = 80;
 	static auto lastMousePosition = sf::Mouse::getPosition(*window.lock());
 	auto change = sf::Mouse::getPosition() - lastMousePosition;
-
-	mCameraMoved = (change.x == 0 && change.y == 0 && mCameraMoved == false) ? false : true;
 
 	mCamera.Rotation.y += static_cast<float>(change.x * 0.05);
 	mCamera.Rotation.x += static_cast<float>(change.y * 0.05);
@@ -264,4 +257,6 @@ void LaiEngine::ExampleScene::MouseInput(std::weak_ptr<sf::RenderWindow> window)
 	sf::Mouse::setPosition({ cx, cy }, *window.lock());
 
 	lastMousePosition = sf::Mouse::getPosition();
+
+	return 	mGetInputs = (change.x == 0 && change.y == 0 && mGetInputs == false) ? false : true;
 }

@@ -12,7 +12,7 @@ namespace LaiEngine
 
 		Camera();
 
-		void Update();
+		void Update(float dt);
 
 		const glm::mat4& GetViewMatrix() const noexcept;
 		const glm::mat4& GetProjectedMatrix() const noexcept;
