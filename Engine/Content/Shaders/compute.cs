@@ -11,6 +11,17 @@ uint g_state = 0;
 #define MATERIAL_LAMBERTIAN 0
 #define MATERIAL_METAL 1
 #define MATERIAL_DIELECTRIC 2
+#define MATERIAL_LIGHT 3
+
+
+
+uniform int numFrames;
+uniform int getInputs;
+uniform float mixingRatio;
+
+uniform mat4 inverseViewMat;
+uniform mat4 inverseProjectedMat;
+
 
 
 struct Ray
@@ -46,12 +57,19 @@ struct Dielectric
     float ref_idx;
 };
 
+struct Light
+{
+	vec3 emit;
+};
+
+
 struct Material
 {
     int type;
     vec3 albedo;
     Metal metal;
     Dielectric dielectric;
+	Light light;
 };
 
 
@@ -62,13 +80,6 @@ struct Scene
     Sphere spheres[32];
     Material materials[32];
 };
-
-
-uniform int numFrames;
-uniform int getInputs;
-
-uniform mat4 inverseViewMat;
-uniform mat4 inverseProjectedMat;
 
 
 uint rand(inout uint state)
@@ -280,7 +291,6 @@ bool HitTheScene(Ray ray, float t_min, float t_max, in Scene scene, out ShadeRec
     float closest_so_far = t_max;
     bool hitAnything = false;
 
-
     for (int i = 0; i < scene.num_spheres; i++)
     {
         if (HitSphere(ray, scene.spheres[i], t_min, closest_so_far, rec))
@@ -305,10 +315,9 @@ vec3 GetColor(Ray ray, in Scene scene)
     vec3 color = vec3(1.0, 1.0, 1.0);
     vec3 attenuation = vec3(0.0, 0.0, 0.0);
 
-
     if (getInputs == 1)
     {
-        depth_max = 10;
+        depth_max = 20;
     }
 
 
@@ -316,20 +325,26 @@ vec3 GetColor(Ray ray, in Scene scene)
     {
         if (HitTheScene(ray, 0.001f, 10000.0f, scene, rec))
         {
-
             Ray scattered;
+            vec3 emitted = vec3(0, 0, 0);
+
+            if(scene.materials[rec.materialID].type == MATERIAL_LIGHT)
+            {
+                emitted = scene.materials[rec.materialID].light.emit;
+                return color * emitted;
+            }
 
             if (scene.materials[rec.materialID].type == MATERIAL_LAMBERTIAN)
             {
                 if (ScatterLambertian(ray, rec, scene.materials[rec.materialID], attenuation, scattered))
                 {
                     color *= attenuation;
+                    color += emitted; 
+
                     ray = scattered;
                 }
                 else
                 {
-                    attenuation = vec3(0.0, 0.0, 0.0);
-                    color += attenuation;
                     break;
                 }
             }
@@ -338,12 +353,12 @@ vec3 GetColor(Ray ray, in Scene scene)
                 if (ScatterMetal(ray, rec, scene.materials[rec.materialID], attenuation, scattered))
                 {
                     color *= attenuation;
+                    color += emitted; 
+
                     ray = scattered;
                 }
                 else
                 {
-                    attenuation = vec3(0.0, 0.0, 0.0);
-                    color += attenuation;
                     break;
                 }
             }
@@ -352,25 +367,25 @@ vec3 GetColor(Ray ray, in Scene scene)
                 if (ScatterDielectric(ray, rec, scene.materials[rec.materialID], attenuation, scattered))
                 {
                     color *= attenuation;
+                    color += emitted; 
+
                     ray = scattered;
                 }
                 else
                 {
-                    attenuation = vec3(0.0, 0.0, 0.0);
-                    color *= attenuation;
                     break;
                 }
-            }
+            }          
         }
         else
         {
-            vec3 unit_dir = normalize(ray.Direction);
-            float t = 0.5f * (unit_dir.y + 1.0f);
-            vec3 backgroundColor = (1.0 - t) * vec3(1, 1, 1) + t * vec3(0.5, 0.7, 1.0);
+            // vec3 unit_dir = normalize(ray.Direction);
+            // float t = 0.5f * (unit_dir.y + 1.0f);
+            // vec3 backgroundColor = (1.0 - t) * vec3(1, 1, 1) + t * vec3(0.5, 0.7, 1.0);
+            // color *= backgroundColor;
+            // break;
 
-            color *= backgroundColor;
-
-            break;
+            return vec3(0.0, 0.0, 0.0);
         }
 
         depth++;
@@ -389,10 +404,9 @@ void main()
     g_state = gl_GlobalInvocationID.x * 1973 + gl_GlobalInvocationID.y * 9277 + uint(numFrames) * 2699 | 1;
 
     Scene scene;
-    scene.num_spheres = 6;
 
+    //Materials: 
 
-    // Blue Lambertian
     scene.materials[0].type = MATERIAL_LAMBERTIAN;
     scene.materials[0].albedo = vec3(0.5, 0.5, 0.5);
 
@@ -410,6 +424,11 @@ void main()
     scene.materials[4].albedo = vec3(0.8, 0.2, 0.2);
     scene.materials[4].metal.roughness = 0.6;
 	
+    scene.materials[5].type = MATERIAL_LIGHT;
+    //scene.materials[5].albedo = vec3(1, 1, 1);
+    scene.materials[5].light.emit = vec3(200, 200, 200);
+
+    //Objects
 	
 	scene.spheres[0].Position = vec3(0.0f, -1000.0f, 0.0f);
     scene.spheres[0].Radius = 1000.0f;
@@ -440,6 +459,17 @@ void main()
     scene.spheres[5].materialID = 4;
 	
 	
+	scene.spheres[6].Position = vec3(3, 3, 0);
+    scene.spheres[6].Radius = 0.5f;
+    scene.spheres[6].materialID = 5;
+	
+	
+	scene.spheres[7].Position = vec3(-3, 3, 0);
+    scene.spheres[7].Radius = 0.5f;
+    scene.spheres[7].materialID = 5;
+
+    scene.num_spheres = 8;
+
     ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
     ivec2 dims = imageSize(img_output);
 
@@ -468,7 +498,7 @@ void main()
     color = vec3(sqrt(color.x), sqrt(color.y), sqrt(color.z));
 
     vec3 prev_color = imageLoad(img_output, pixel_coords).rgb;
-    vec3 final = mix(color, prev_color, float(numFrames) / float(numFrames + 1));
+    vec3 final = mix(color, prev_color, mixingRatio);
 
     imageStore(img_output, pixel_coords, vec4(final, 1.0f));
 };

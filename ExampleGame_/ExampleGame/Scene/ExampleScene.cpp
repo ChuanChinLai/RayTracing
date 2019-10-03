@@ -27,7 +27,7 @@ std::ostream& operator<<(std::ostream& os, const glm::vec3& v)
 
 GLuint textureColorbuffer = 0;
 
-int tex_w = 800, tex_h = 800;
+int tex_w = 600, tex_h = 600;
 
 LaiEngine::ExampleScene::ExampleScene(const SceneManager & sceneManager) : IGameScene(sceneManager)
 {
@@ -87,6 +87,7 @@ void LaiEngine::ExampleScene::Update(const float dt)
 	mComputeShader.UseProgram();
 	mComputeShader.SetNumFrames(mNumFrames);
 	mComputeShader.SetGetInputs(mGetInputs);
+	mComputeShader.SetMixingRatio(static_cast<float>(mNumFrames) / static_cast<float>(mNumFrames + 1));
 
 	mComputeShader.SetInverseViewMat(glm::inverse(mCamera.GetViewMatrix()));
 	mComputeShader.SetInverseProjectedMat(glm::inverse(mCamera.GetProjectedMatrix()));
@@ -203,7 +204,7 @@ void LaiEngine::ExampleScene::Test()
 bool LaiEngine::ExampleScene::KeyboardInput(std::weak_ptr<sf::RenderWindow> window)
 {
 	glm::vec3 dv;
-	float speed = 0.5f;
+	constexpr float speed = 0.5f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
 	{

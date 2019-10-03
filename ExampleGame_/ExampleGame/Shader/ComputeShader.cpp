@@ -28,6 +28,11 @@ void LaiEngine::ComputeShader::SetGetInputs(const int num)
 	SetUniformValue(m_locationGetInputs, num);
 }
 
+void LaiEngine::ComputeShader::SetMixingRatio(const float num)
+{
+	SetUniformValue(m_locationMixingRatio, num);
+}
+
 void LaiEngine::ComputeShader::SetInverseViewMat(const glm::mat4 & matrix)
 {
 	SetUniformValue(m_locationInverseViewMat, matrix);
@@ -44,6 +49,7 @@ void LaiEngine::ComputeShader::GetUniforms()
 
 	m_locationNumFrames = glGetUniformLocation(m_programId, "numFrames");
 	m_locationGetInputs = glGetUniformLocation(m_programId, "getInputs");
+	m_locationMixingRatio = glGetUniformLocation(m_programId, "mixingRatio");
 
 	m_locationInverseViewMat = glGetUniformLocation(m_programId, "inverseViewMat");
 	m_locationInverseProjectedMat = glGetUniformLocation(m_programId, "inverseProjectedMat");
