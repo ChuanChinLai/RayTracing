@@ -312,7 +312,6 @@ vec3 GetColor(Ray ray, in Scene scene)
     }
 
 
-
     while (depth < depth_max)
     {
         if (HitTheScene(ray, 0.001f, 10000.0f, scene, rec))
@@ -390,55 +389,57 @@ void main()
     g_state = gl_GlobalInvocationID.x * 1973 + gl_GlobalInvocationID.y * 9277 + uint(numFrames) * 2699 | 1;
 
     Scene scene;
-    scene.num_spheres = 5;
+    scene.num_spheres = 6;
 
 
     // Blue Lambertian
     scene.materials[0].type = MATERIAL_LAMBERTIAN;
-    scene.materials[0].albedo = vec3(0.8, 0.8, 0.0);
+    scene.materials[0].albedo = vec3(0.5, 0.5, 0.5);
 
-    // Floor
-    scene.materials[1].type = MATERIAL_LAMBERTIAN;
-    scene.materials[1].albedo = vec3(0.8, 0.3, 0.3);
-
-    scene.materials[2].type = MATERIAL_METAL;
-    scene.materials[2].albedo = vec3(0.8, 0.6, 0.2);
-    scene.materials[2].metal.roughness = 0.3;
+	scene.materials[1].type = MATERIAL_DIELECTRIC;
+    scene.materials[1].dielectric.ref_idx = 1.5;
+	
+    scene.materials[2].type = MATERIAL_LAMBERTIAN;
+    scene.materials[2].albedo = vec3(0.4, 0.2, 0.1);
 
     scene.materials[3].type = MATERIAL_METAL;
-    scene.materials[3].albedo = vec3(0.8, 0.8, 0.8);
-    scene.materials[3].metal.roughness = 0.0;
+    scene.materials[3].albedo = vec3(0.7, 0.6, 0.5);
+    scene.materials[3].metal.roughness = 0.1;
 
-    scene.materials[4].type = MATERIAL_DIELECTRIC;
-    scene.materials[4].albedo = vec3(0.8, 0.8, 0.8);
-    scene.materials[4].dielectric.ref_idx = 1.5;
+    scene.materials[4].type = MATERIAL_METAL;
+    scene.materials[4].albedo = vec3(0.8, 0.2, 0.2);
+    scene.materials[4].metal.roughness = 0.6;
+	
+	
+	scene.spheres[0].Position = vec3(0.0f, -1000.0f, 0.0f);
+    scene.spheres[0].Radius = 1000.0f;
+    scene.spheres[0].materialID = 0;
+	
 
-
-
-    scene.spheres[0].Position = vec3(0.0f, 0.0f, -1.0f);
-    scene.spheres[0].Radius = 0.5f;
-    scene.spheres[0].materialID = 1;
-
-    scene.spheres[1].Position = vec3(0.0f, -100.5f, -1.0f);
-    scene.spheres[1].Radius = 100.0f;
-    scene.spheres[1].materialID = 0;
-
-    scene.spheres[2].Position = vec3(-1.0, 0.0, -1.0);
-    scene.spheres[2].Radius = 0.5f;
-    scene.spheres[2].materialID = 4;
+    scene.spheres[1].Position = vec3(2.2, 1.0, 2.2);
+    scene.spheres[1].Radius = 1.0f;
+    scene.spheres[1].materialID = 1;
 
 
-    scene.spheres[3].Position = vec3(1.0, 0.0, -1.0);
-    scene.spheres[3].Radius = 0.5f;
-    scene.spheres[3].materialID = 2;
-
-    scene.spheres[4].Position = vec3(-1.0, 0.0, -1.0);
-    scene.spheres[4].Radius = -0.45f;
-    scene.spheres[4].materialID = 4;
+    scene.spheres[2].Position = vec3(-2.2, 1.0, -2.2);
+    scene.spheres[2].Radius = 1.0f;
+    scene.spheres[2].materialID = 2;
 
 
+    scene.spheres[3].Position = vec3(2.2, 1.0, -2.2);
+    scene.spheres[3].Radius = 1.0f;
+    scene.spheres[3].materialID = 3;
 
-
+	scene.spheres[4].Position = vec3(2.2, 1.0, 2.2);
+    scene.spheres[4].Radius = -0.9f;
+    scene.spheres[4].materialID = 1;
+	
+	
+	scene.spheres[5].Position = vec3(-2.2, 1.0, 2.2);
+    scene.spheres[5].Radius = 1.0f;
+    scene.spheres[5].materialID = 4;
+	
+	
     ivec2 pixel_coords = ivec2(gl_GlobalInvocationID.xy);
     ivec2 dims = imageSize(img_output);
 
