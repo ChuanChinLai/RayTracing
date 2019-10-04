@@ -5,6 +5,7 @@
 
 #include <glm/glm.hpp>
 
+
 glm::vec3 LaiEngine::Util::GetColor(const Ray & ray, GameObject * world, int depth)
 {
 	ShadeRec rec;

@@ -3,90 +3,65 @@
 
 #include "cuda_runtime.h"
 
-
-#define N (1024*1024)
-#define M (10000)
-#define THREADS_PER_BLOCK 1024
-
-
-extern void addWithCuda(double *a, double *b, double *c, unsigned int size);
-
-
-void serial_add(double *a, double *b, double *c, int n, int m)
-{
-	for (int i = 0; i < 10; i++)
-	{
-		for (int index = 0; index < n; index++)
-		{
-			for (int j = 0; j < m; j++)
-			{
-				c[index] = a[index] * a[index] + b[index] * b[index];
-			}
-		}
-	}
-}
-
-
 int main()
 {
+	//int dev = 0;
+	//cudaDeviceProp devProp;
+	//cudaGetDeviceProperties(&devProp, dev);
+	//std::cout << "GPU device " << dev << ": " << devProp.name << std::endl;
+	//std::cout << "SM:" << devProp.multiProcessorCount << std::endl;
+	//std::cout << "" << devProp.sharedMemPerBlock / 1024.0 << " KB" << std::endl;
+	//std::cout << "" << devProp.maxThreadsPerBlock << std::endl;
+	//std::cout << "" << devProp.maxThreadsPerMultiProcessor << std::endl;
+	//std::cout << "" << devProp.maxThreadsPerMultiProcessor / 32 << std::endl;
 
-	int dev = 0;
-	cudaDeviceProp devProp;
-	cudaGetDeviceProperties(&devProp, dev);
-	std::cout << "GPU device " << dev << ": " << devProp.name << std::endl;
-	std::cout << "SM:" << devProp.multiProcessorCount << std::endl;
-	std::cout << "" << devProp.sharedMemPerBlock / 1024.0 << " KB" << std::endl;
-	std::cout << "" << devProp.maxThreadsPerBlock << std::endl;
-	std::cout << "" << devProp.maxThreadsPerMultiProcessor << std::endl;
-	std::cout << "" << devProp.maxThreadsPerMultiProcessor / 32 << std::endl;
+	//clock_t start, end;
 
-	clock_t start, end;
+	//double *a, *b, *c;
+	//int size = N * sizeof(double);
 
-	double *a, *b, *c;
-	int size = N * sizeof(double);
+	//a = (double *)malloc(size);
+	//b = (double *)malloc(size);
+	//c = (double *)malloc(size);
 
-	a = (double *)malloc(size);
-	b = (double *)malloc(size);
-	c = (double *)malloc(size);
-
-	for (int i = 0; i < N; i++)
-	{
-		a[i] = b[i] = i;
-		c[i] = 0;
-	}
-
-	start = clock();
-	serial_add(a, b, c, N, M);
-
-	printf("c[%d] = %f\n", 0, c[0]);
-	printf("c[%d] = %f\n", N - 1, c[N - 1]);
-
-	end = clock();
-
-	float time1 = ((float)(end - start)) / CLOCKS_PER_SEC;
-	printf("CPU: %f seconds\n", time1);
-
-	start = clock();
-
-	addWithCuda(a, b, c, size);
-
-	end = clock();
-	float time2 = ((float)(end - start)) / CLOCKS_PER_SEC;
-	printf("CUDA: %f seconds, Speedup: %f\n", time2, time1 / time2);
-
-	free(a);
-	free(b);
-	free(c);
-
+	//for (int i = 0; i < N; i++)
 	//{
-	//	LaiEngine::GameEngine game("Ray Tracing");
-
-	//	if (!game.Init())
-	//		return -1;
-
-	//	game.GameLoop();
-	//	game.Release();
+	//	a[i] = b[i] = i;
+	//	c[i] = 0;
 	//}
+
+	//start = clock();
+	//serial_add(a, b, c, N, M);
+
+	//printf("c[%d] = %f\n", 0, c[0]);
+	//printf("c[%d] = %f\n", N - 1, c[N - 1]);
+
+	//end = clock();
+
+	//float time1 = ((float)(end - start)) / CLOCKS_PER_SEC;
+	//printf("CPU: %f seconds\n", time1);
+
+	//start = clock();
+
+	//addWithCuda(a, b, c, size);
+
+	//end = clock();
+	//float time2 = ((float)(end - start)) / CLOCKS_PER_SEC;
+	//printf("CUDA: %f seconds, Speedup: %f\n", time2, time1 / time2);
+
+	//free(a);
+	//free(b);
+	//free(c);
+
+	{
+		LaiEngine::GameEngine game("Ray Tracing");
+
+		if (!game.Init())
+			return -1;
+
+		game.GameLoop();
+		game.Release();
+	}
 
 
 #if defined _DEBUG

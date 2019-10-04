@@ -50,7 +50,7 @@ void LaiEngine::Engine::GameLoop()
 
 
 		mSceneManager->Draw(mRenderWindow);
-		mRenderWindow->display();
+		//mRenderWindow->display();
 
 		HandleEvents(event);
 		accumulator += clock.restart();
