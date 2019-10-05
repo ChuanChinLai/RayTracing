@@ -27,7 +27,7 @@ void check_cuda(cudaError_t result, char const *const func, const char *const fi
 }
 
 
-__global__ void render(float *deviceBuffer, int max_x, int max_y)
+__global__ void render(float *deviceBuffer, uint8_t* outputBuffer, int max_x, int max_y)
 {
 	int i = threadIdx.x + blockIdx.x * blockDim.x;
 	int j = threadIdx.y + blockIdx.y * blockDim.y;
@@ -36,36 +36,48 @@ __global__ void render(float *deviceBuffer, int max_x, int max_y)
 
 	int pixel_index = j * max_x * 4 + i * 4;
 
-	deviceBuffer[pixel_index + 0] = float(i) / max_x;
-	deviceBuffer[pixel_index + 1] = float(j) / max_y;
-	deviceBuffer[pixel_index + 2] = 0.2f;
+	deviceBuffer[pixel_index + 0] = static_cast<float>(i) / max_x;
+	deviceBuffer[pixel_index + 1] = static_cast<float>(j) / max_y;
+	deviceBuffer[pixel_index + 2] = 0.2;
+
+	float r = deviceBuffer[pixel_index + 0];
+	float g = deviceBuffer[pixel_index + 1];
+	float b = deviceBuffer[pixel_index + 2];
+
+	uint8_t ir = static_cast<uint8_t>(255.99f * r);
+	uint8_t ig = static_cast<uint8_t>(255.99f * g);
+	uint8_t ib = static_cast<uint8_t>(255.99f * b);
+
+	outputBuffer[pixel_index + 0] = ir;
+	outputBuffer[pixel_index + 1] = ig;
+	outputBuffer[pixel_index + 2] = ib;
+	outputBuffer[pixel_index + 3] = 255;
 }
 
 // Helper function for using CUDA to add vectors in parallel.
 
 
-void GetPixelColorWithCuda(float *buffer, const size_t buffer_size, int nx, int ny, int tx, int ty)
+void GetPixelColorWithCuda(uint8_t* outputBuffer, const size_t buffer_size, int nx, int ny, int tx, int ty)
 {
-	float* deviceBuffer; 
+	// allocate device buffer
+	float *deviceBuffer;
+	checkCudaErrors(cudaMallocManaged((void **)&deviceBuffer, buffer_size * sizeof(float)));
 
-	std::cerr << "Rendering a " << nx << "x" << ny << " image ";
-	std::cerr << "in " << tx << "x" << ty << " blocks.\n";
-
-	// allocate FB
-	checkCudaErrors(cudaMallocManaged((void **)&deviceBuffer, nx * ny * 4));
+	uint8_t* oBuffer;
+	checkCudaErrors(cudaMallocManaged((void **)&oBuffer, buffer_size));
 
 	clock_t start, stop;
 	start = clock();
 	// Render our buffer
 	dim3 blocks(nx / tx + 1, ny / ty + 1);
 	dim3 threads(tx, ty);
-	render << <blocks, threads >> > (deviceBuffer, nx, ny);
+	render << <blocks, threads >> > (deviceBuffer, oBuffer, nx, ny);
 	checkCudaErrors(cudaGetLastError());
 	checkCudaErrors(cudaDeviceSynchronize());
 	stop = clock();
 	double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
 	std::cerr << "took " << timer_seconds << " seconds.\n";
 
-	checkCudaErrors(cudaMemcpy(buffer, deviceBuffer, buffer_size, cudaMemcpyDeviceToHost));
+	checkCudaErrors(cudaMemcpy(outputBuffer, oBuffer, buffer_size, cudaMemcpyDeviceToHost));
 	checkCudaErrors(cudaFree(deviceBuffer));
 }

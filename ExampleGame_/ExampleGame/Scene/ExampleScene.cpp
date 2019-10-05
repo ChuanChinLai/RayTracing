@@ -17,7 +17,7 @@
 #include <fstream>
 #include <random>
 
-extern void GetPixelColorWithCuda(float* buffer, const size_t buffer_size, int nx, int ny, int tx, int ty);
+extern void GetPixelColorWithCuda(uint8_t* buffer, const size_t buffer_size, int nx, int ny, int tx, int ty);
 
 GLuint textureColorbuffer = 0;
 
@@ -158,11 +158,10 @@ void LaiEngine::ExampleScene::Test()
 
 	constexpr size_t rgba = 4;
 	const size_t buffer_size = nx * ny * 4;
-	float* buffer = (float*)malloc(buffer_size * sizeof(float));
+	//float* buffer = (float*)malloc(buffer_size * sizeof(float));
 
+	uint8_t* buffer = (uint8_t*)malloc(buffer_size);
 	GetPixelColorWithCuda(buffer, buffer_size, nx, ny, 8, 8);
-
-	sf::Uint8* pixels = new sf::Uint8[buffer_size];
 
 	image.create(nx, ny, sf::Color::Blue);
 
@@ -177,42 +176,48 @@ void LaiEngine::ExampleScene::Test()
 
 	//int index = 0;
 
+	clock_t start, stop;
+	start = clock();
 
-	std::ofstream result("image1.ppm");
-	if (!result.is_open())
-		return;
+	//std::ofstream result("image1.ppm");
+	//if (!result.is_open())
+	//	return;
 
-	result << "P3\n" << nx << " " << ny << " 255\n";
+	//result << "P3\n" << nx << " " << ny << " 255\n";
 
-	int index = 0;
+	//int index = 0;
 
-	for (int j = ny - 1; j >= 0; j--)
-	{
-		for (int i = 0; i < nx; i++)
-		{
-			size_t pixel_index = j * 4 * nx + i * 4;
+	//for (int j = ny - 1; j >= 0; j--)
+	//{
+	//	for (int i = 0; i < nx; i++)
+	//	{
+	//		size_t pixel_index = j * 4 * nx + i * 4;
 
-			float r = buffer[pixel_index + 0];
-			float g = buffer[pixel_index + 1];
-			float b = buffer[pixel_index + 2];
+	//		float r = buffer[pixel_index + 0];
+	//		float g = buffer[pixel_index + 1];
+	//		float b = buffer[pixel_index + 2];
 
-			int ir = int(255.99f * r);
-			int ig = int(255.99f * g);
-			int ib = int(255.99f * b);
+	//		int ir = int(255.99f * r);
+	//		int ig = int(255.99f * g);
+	//		int ib = int(255.99f * b);
 
-			pixels[index + 0] = ir;
-			pixels[index + 1] = ig;
-			pixels[index + 2] = ib;
-			pixels[index + 3] = 255;
+	//		buffer[index + 0] = ir;
+	//		buffer[index + 1] = ig;
+	//		buffer[index + 2] = ib;
+	//		buffer[index + 3] = 255;
 
-			index += 4;
+	//		index += 4;
 
-			result << ir << " " << ig << " " << ib << "\n";
-			//std::cout << ir << " " << ig << " " << ib << "\n";
-		}
-	}
+	//		result << ir << " " << ig << " " << ib << "\n";
+	//		//std::cout << ir << " " << ig << " " << ib << "\n";
+	//	}
+	//}
 
-	result.close();
+	//result.close();
+
+	stop = clock();
+	double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
+	std::cerr << "took " << timer_seconds << " seconds.\n";
 
 	//for (int j = ny - 1; j >= 0; j--)
 	//{
@@ -253,9 +258,10 @@ void LaiEngine::ExampleScene::Test()
 	//texture.loadFromImage(image);
 
 	texture.create(nx, ny);
-	texture.update(pixels);
+	texture.update(buffer);
 
 	sprite.setTexture(texture);
+
 
 	//delete world;
 }
