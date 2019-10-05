@@ -8,17 +8,8 @@
     <ClCompile Include="Scene\ExampleScene.cpp">
       <Filter>Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Ray.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\Sphere.cpp">
-      <Filter>GameObject</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Utility.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject\GameObject.cpp">
-      <Filter>GameObject</Filter>
     </ClCompile>
     <ClCompile Include="Core\Camera.cpp">
       <Filter>Core</Filter>
@@ -66,9 +57,6 @@
     <ClInclude Include="Core\Ray.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject\Sphere.h">
-      <Filter>GameObject</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Utility.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -84,5 +72,8 @@
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="kernel.cu" />
+    <CudaCompile Include="GameObject\Sphere.h">
+      <Filter>GameObject</Filter>
+    </CudaCompile>
   </ItemGroup>
 </Project>

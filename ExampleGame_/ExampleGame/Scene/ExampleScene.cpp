@@ -153,8 +153,8 @@ void LaiEngine::ExampleScene::InputProcess(std::weak_ptr<sf::RenderWindow> windo
 
 void LaiEngine::ExampleScene::Test()
 {
-	int nx = 800; 
-	int ny = 800;
+	int nx = 400; 
+	int ny = 400;
 
 	constexpr size_t rgba = 4;
 	const size_t buffer_size = nx * ny * 4;
@@ -163,7 +163,7 @@ void LaiEngine::ExampleScene::Test()
 	uint8_t* buffer = (uint8_t*)malloc(buffer_size);
 	GetPixelColorWithCuda(buffer, buffer_size, nx, ny, 8, 8);
 
-	image.create(nx, ny, sf::Color::Blue);
+	image.create(nx, ny, sf::Color::White);
 
 	//std::vector<GameObject*> list(4, nullptr);
 

@@ -212,10 +212,7 @@
   <ItemGroup>
     <ClCompile Include="Core\Camera.cpp" />
     <ClCompile Include="Core\GameEngine.cpp" />
-    <ClCompile Include="Core\Ray.cpp" />
     <ClCompile Include="Core\Utility.cpp" />
-    <ClCompile Include="GameObject\GameObject.cpp" />
-    <ClCompile Include="GameObject\Sphere.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material\Material.cpp" />
     <ClCompile Include="Scene\ExampleScene.cpp" />
@@ -228,7 +225,7 @@
     <ClInclude Include="Core\Ray.h" />
     <ClInclude Include="Core\Utility.h" />
     <ClInclude Include="GameObject\GameObject.h" />
-    <ClInclude Include="GameObject\Sphere.h" />
+    <CudaCompile Include="GameObject\Sphere.h" />
     <ClInclude Include="Material\Material.h" />
     <ClInclude Include="Scene\ExampleScene.h" />
     <ClInclude Include="Shader\BasicShader.h" />
