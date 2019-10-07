@@ -1,5 +1,7 @@
-#include "cuda_runtime.h"
-#include "device_launch_parameters.h"
+#include <cuda_runtime.h>
+#include <device_launch_parameters.h>
+#include <CUDA/curand.h>
+#include <CUDA/curand_kernel.h>
 
 #include <ExampleGame/Core/Utility.h>
 #include <ExampleGame/GameObject/GameObject.h>
@@ -23,6 +25,17 @@ void check_cuda(cudaError_t result, char const *const func, const char *const fi
 		exit(99);
 	}
 }
+
+__global__ void render_init(int max_x, int max_y, curandState *randState) 
+{
+	int i = threadIdx.x + blockIdx.x * blockDim.x;
+	int j = threadIdx.y + blockIdx.y * blockDim.y;
+	if ((i >= max_x) || (j >= max_y)) return;
+	int pixel_index = j * max_x + i;
+	//Each thread gets same seed, a different sequence number, no offset
+	curand_init(1984, pixel_index, 0, &randState[pixel_index]);
+}
+
 
 __device__ bool hit_sphere(const glm::vec3& center, float radius, const LaiEngine::Ray& r) 
 {
@@ -125,45 +138,54 @@ __global__ void free_world(LaiEngine::GameObject **d_list, LaiEngine::GameObject
 // Helper function for using CUDA to add vectors in parallel.
 
 
-void GetPixelColorWithCuda(uint8_t* outputBuffer, const size_t buffer_size, int nx, int ny, int tx, int ty)
+void RenderWithCuda(uint8_t* outputBuffer, const size_t buffer_size, int nx, int ny, int tx, int ty)
 {
+	dim3 blocks(nx / tx + 1, ny / ty + 1);
+	dim3 threads(tx, ty);
+
+
+	// allocate random state
+	curandState *d_randState;
+	checkCudaErrors(cudaMalloc((void **)&d_randState, nx * ny * sizeof(curandState)));
+	render_init << <blocks, threads >> > (nx, ny, d_randState);
+	checkCudaErrors(cudaGetLastError());
+	checkCudaErrors(cudaDeviceSynchronize());
+
+
 	// allocate device buffer
 	uint8_t* deviceBuffer;
 	checkCudaErrors(cudaMallocManaged((void **)&deviceBuffer, buffer_size));
 
-
 	// make our world of hitables
-	LaiEngine::GameObject **d_list;
-	checkCudaErrors(cudaMalloc((void **)&d_list, 2 * sizeof(LaiEngine::GameObject* )));
-	LaiEngine::GameObject **d_world;
-	checkCudaErrors(cudaMalloc((void **)&d_world, sizeof(LaiEngine::GameObject* )));
+	LaiEngine::GameObject **d_List;
+	checkCudaErrors(cudaMalloc((void **)&d_List, 2 * sizeof(LaiEngine::GameObject* )));
+	LaiEngine::GameObject **d_World;
+	checkCudaErrors(cudaMalloc((void **)&d_World, sizeof(LaiEngine::GameObject* )));
 
-	create_world << < 1, 1 >> > (d_list, d_world);
+	create_world << < 1, 1 >> > (d_List, d_World);
 	checkCudaErrors(cudaGetLastError());
 	checkCudaErrors(cudaDeviceSynchronize());
 
 
 	clock_t start, stop;
 	start = clock();
-	// Render our buffer
-	dim3 blocks(nx / tx + 1, ny / ty + 1);
-	dim3 threads(tx, ty);
-	render<<< blocks, threads >>>(deviceBuffer, nx, ny, d_world);
+	render<<< blocks, threads >>>(deviceBuffer, nx, ny, d_World);
 
 	stop = clock();
 	double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
 	std::cerr << "took " << timer_seconds << " seconds.\n";
 
 
-	checkCudaErrors(cudaGetLastError());
-	checkCudaErrors(cudaDeviceSynchronize());
-
-	free_world <<<1, 1>>> (d_list, d_world);
-	checkCudaErrors(cudaFree(d_list));
-	checkCudaErrors(cudaFree(d_world));
-
-
 	checkCudaErrors(cudaMemcpy(outputBuffer, deviceBuffer, buffer_size, cudaMemcpyDeviceToHost));
+
+	checkCudaErrors(cudaDeviceSynchronize());
+	free_world << <1, 1 >> > (d_List, d_World);
+
+	checkCudaErrors(cudaGetLastError());
+
+	checkCudaErrors(cudaFree(d_randState));
+	checkCudaErrors(cudaFree(d_List));
+	checkCudaErrors(cudaFree(d_World));
 	checkCudaErrors(cudaFree(deviceBuffer));
 
 	cudaDeviceReset();

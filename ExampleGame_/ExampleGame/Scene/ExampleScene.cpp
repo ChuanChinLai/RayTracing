@@ -17,7 +17,7 @@
 #include <fstream>
 #include <random>
 
-extern void GetPixelColorWithCuda(uint8_t* buffer, const size_t buffer_size, int nx, int ny, int tx, int ty);
+extern void RenderWithCuda(uint8_t* buffer, const size_t buffer_size, int nx, int ny, int tx, int ty);
 
 GLuint textureColorbuffer = 0;
 
@@ -153,15 +153,16 @@ void LaiEngine::ExampleScene::InputProcess(std::weak_ptr<sf::RenderWindow> windo
 
 void LaiEngine::ExampleScene::Test()
 {
-	int nx = 400; 
-	int ny = 400;
+	int nx = 800; 
+	int ny = 800;
 
 	constexpr size_t rgba = 4;
 	const size_t buffer_size = nx * ny * 4;
 	//float* buffer = (float*)malloc(buffer_size * sizeof(float));
 
-	uint8_t* buffer = (uint8_t*)malloc(buffer_size);
-	GetPixelColorWithCuda(buffer, buffer_size, nx, ny, 8, 8);
+	//uint8_t* buffer = (uint8_t*)malloc(buffer_size);
+	uint8_t* buffer = new uint8_t[buffer_size];
+	RenderWithCuda(buffer, buffer_size, nx, ny, 16, 16);
 
 	image.create(nx, ny, sf::Color::White);
 
@@ -263,7 +264,8 @@ void LaiEngine::ExampleScene::Test()
 	sprite.setTexture(texture);
 
 
-	//delete world;
+	delete[] buffer;
+ 	//delete world;
 }
 
 bool LaiEngine::ExampleScene::KeyboardInput(std::weak_ptr<sf::RenderWindow> window)
