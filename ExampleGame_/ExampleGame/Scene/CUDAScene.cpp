@@ -1,5 +1,8 @@
 #include "CUDAScene.h"
 
+#include <ExampleGame/CUDA/kernel.cuh>
+
+
 LaiEngine::CUDAScene::CUDAScene(const SceneManager & sceneManager) : IGameScene(sceneManager)
 {
 }
@@ -17,8 +20,9 @@ void LaiEngine::CUDAScene::Init()
 	const size_t buffer_size = nx * ny * size_rgba;
 
 	uint8_t* buffer = new uint8_t[buffer_size];
-	//RenderWithCuda(buffer, buffer_size, nx, ny, 16, 16);
 
+	CUDA::Update(buffer, buffer_size, nx, ny, 16, 16);
+	
 	this->image.create(nx, ny, sf::Color::White);
 	this->texture.create(nx, ny);
 	this->texture.update(buffer);
@@ -42,7 +46,6 @@ void LaiEngine::CUDAScene::Draw(std::weak_ptr<sf::RenderWindow> window)
 	{
 		w->clear();
 		w->draw(this->sprite);
-		w->display();
 	}
 }
 

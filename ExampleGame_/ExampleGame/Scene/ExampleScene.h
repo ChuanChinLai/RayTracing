@@ -26,11 +26,8 @@ namespace LaiEngine
 
 	private:
 
-		void Test();
-
 		bool KeyboardInput(std::weak_ptr<sf::RenderWindow> window);
 		bool MouseInput(std::weak_ptr<sf::RenderWindow> window);
-
 
 		Model mModel;
 		Camera mCamera;

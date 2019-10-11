@@ -243,12 +243,6 @@
     <ClInclude Include="Shader\BasicShader.h" />
     <ClInclude Include="Shader\ComputeShader.h" />
   </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="kernel_back.cu">
-      <FileType>Document</FileType>
-      <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
-    </CudaCompile>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 10.1.targets" />

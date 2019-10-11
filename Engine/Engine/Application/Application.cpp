@@ -50,7 +50,7 @@ void LaiEngine::Engine::GameLoop()
 
 
 		mSceneManager->Draw(mRenderWindow);
-		//mRenderWindow->display();
+		mRenderWindow->display();
 
 		HandleEvents(event);
 		accumulator += clock.restart();
@@ -69,7 +69,7 @@ bool LaiEngine::Engine::InitGL(const std::string & title)
 	try
 	{
 		sf::String sf_title(title.c_str());
-		mRenderWindow->create({ 500, 500 }, sf_title, sf::Style::Close, settings);
+		mRenderWindow->create({ 600, 600 }, sf_title, sf::Style::Close, settings);
 
 		GLenum error = glewInit();
 		if (GLEW_OK != error)

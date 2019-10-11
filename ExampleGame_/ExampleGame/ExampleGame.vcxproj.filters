@@ -86,7 +86,6 @@
     <CudaCompile Include="GameObject\Sphere.h">
       <Filter>GameObject</Filter>
     </CudaCompile>
-    <CudaCompile Include="kernel_back.cu" />
     <CudaCompile Include="CUDA\kernel.cu">
       <Filter>CUDA</Filter>
     </CudaCompile>
