@@ -17,6 +17,7 @@
 #include <fstream>
 #include <random>
 
+extern void InitCuda(int nx, int ny, int tx, int ty);
 extern void RenderWithCuda(uint8_t* buffer, const size_t buffer_size, int nx, int ny, int tx, int ty);
 
 GLuint textureColorbuffer = 0;
@@ -153,11 +154,11 @@ void LaiEngine::ExampleScene::InputProcess(std::weak_ptr<sf::RenderWindow> windo
 
 void LaiEngine::ExampleScene::Test()
 {
-	int nx = 800; 
-	int ny = 800;
+	int nx = 500; 
+	int ny = 500;
 
-	constexpr size_t rgba = 4;
-	const size_t buffer_size = nx * ny * 4;
+	constexpr size_t size_rgba = 4;
+	const size_t buffer_size = nx * ny * size_rgba;
 	//float* buffer = (float*)malloc(buffer_size * sizeof(float));
 
 	//uint8_t* buffer = (uint8_t*)malloc(buffer_size);

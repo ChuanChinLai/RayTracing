@@ -23,6 +23,9 @@
     <ClCompile Include="Shader\ComputeShader.cpp">
       <Filter>Shader</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\CUDAScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Core">
@@ -39,6 +42,9 @@
     </Filter>
     <Filter Include="Shader">
       <UniqueIdentifier>{f2bf6b56-9240-4618-b779-1c1085d26527}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CUDA">
+      <UniqueIdentifier>{83497bb1-37a3-4b4f-8d8e-32f5e0898dbe}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -69,11 +75,20 @@
     <ClInclude Include="Shader\ComputeShader.h">
       <Filter>Shader</Filter>
     </ClInclude>
+    <ClInclude Include="Scene\CUDAScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="CUDA\kernel.cuh">
+      <Filter>CUDA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.cu" />
     <CudaCompile Include="GameObject\Sphere.h">
       <Filter>GameObject</Filter>
+    </CudaCompile>
+    <CudaCompile Include="kernel_back.cu" />
+    <CudaCompile Include="CUDA\kernel.cu">
+      <Filter>CUDA</Filter>
     </CudaCompile>
   </ItemGroup>
 </Project>

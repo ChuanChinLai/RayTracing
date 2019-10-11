@@ -223,6 +223,7 @@
     <ClCompile Include="Core\Utility.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material\Material.cpp" />
+    <ClCompile Include="Scene\CUDAScene.cpp" />
     <ClCompile Include="Scene\ExampleScene.cpp" />
     <ClCompile Include="Shader\BasicShader.cpp" />
     <ClCompile Include="Shader\ComputeShader.cpp" />
@@ -232,15 +233,18 @@
     <ClInclude Include="Core\GameEngine.h" />
     <ClInclude Include="Core\Ray.h" />
     <ClInclude Include="Core\Utility.h" />
+    <ClInclude Include="CUDA\kernel.cuh" />
     <ClInclude Include="GameObject\GameObject.h" />
+    <CudaCompile Include="CUDA\kernel.cu" />
     <CudaCompile Include="GameObject\Sphere.h" />
     <ClInclude Include="Material\Material.h" />
+    <ClInclude Include="Scene\CUDAScene.h" />
     <ClInclude Include="Scene\ExampleScene.h" />
     <ClInclude Include="Shader\BasicShader.h" />
     <ClInclude Include="Shader\ComputeShader.h" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="kernel.cu">
+    <CudaCompile Include="kernel_back.cu">
       <FileType>Document</FileType>
       <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
     </CudaCompile>

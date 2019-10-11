@@ -4,6 +4,7 @@
 #include <CUDA/curand_kernel.h>
 
 #include <ExampleGame/Core/Utility.h>
+#include <ExampleGame/Core/Camera.h>
 #include <ExampleGame/GameObject/GameObject.h>
 #include <ExampleGame/GameObject/Sphere.h>
 #include <SFML/Graphics.hpp>
@@ -49,7 +50,7 @@ __device__ bool hit_sphere(const glm::vec3& center, float radius, const LaiEngin
 
 
 
-__device__ glm::vec3 color(const LaiEngine::Ray& r, LaiEngine::GameObject **world)
+__device__ glm::vec3 GetColor(const LaiEngine::Ray& r, LaiEngine::GameObject **world)
 {
 	LaiEngine::Util::ShadeRec rec; 
 
@@ -64,7 +65,7 @@ __device__ glm::vec3 color(const LaiEngine::Ray& r, LaiEngine::GameObject **worl
 	return (1.0f - t) * glm::vec3(1.0, 1.0, 1.0) + t * glm::vec3(0.5, 0.7, 1.0);
 }
 
-__global__ void render(uint8_t* outputBuffer, int max_x, int max_y, LaiEngine::GameObject **world)
+__global__ void render(uint8_t* outputBuffer, int max_x, int max_y, int ns, LaiEngine::CUDA::Camera** camera, LaiEngine::GameObject** world, curandState* randState)
 {
 
 	int i = threadIdx.x + blockIdx.x * blockDim.x;
@@ -72,74 +73,88 @@ __global__ void render(uint8_t* outputBuffer, int max_x, int max_y, LaiEngine::G
 
 	if (i >= max_x || j >= max_y) return;
 
-	float u = float(i) / float(max_x);
-	float v = float(max_y - j + 1) / float(max_y);
 
-	LaiEngine::Ray ray(glm::vec3(0.0), glm::vec3(-1, -1, -1) + u * glm::vec3(2, 0, 0) + v * glm::vec3(0, 2, 0));
+	constexpr int sizePerPixel = 4;
+	int bufferIndex = j * max_x * sizePerPixel + i * sizePerPixel;
 
-	glm::vec3 c = color(ray, world);
+	int randStateIndex = j * max_x + i;
+	curandState local_rand_state = randState[randStateIndex];
 
-	float r = c.x;
-	float g = c.y;
-	float b = c.z;
+	glm::vec3 color; 
 
-	uint8_t ir = static_cast<uint8_t>(255.99f * r);
-	uint8_t ig = static_cast<uint8_t>(255.99f * g);
-	uint8_t ib = static_cast<uint8_t>(255.99f * b);
+	for (int s = 0; s < ns; s++)
+	{
+		float u = float(i + curand_uniform(&local_rand_state)) / float(max_x);
+		float v = float(max_y - j + 1 + curand_uniform(&local_rand_state)) / float(max_y);
 
+		LaiEngine::Ray ray = (*camera)->GetRay(u, v);
 
-	int pixel_index = j * max_x * 4 + i * 4;
+		color += GetColor(ray, world);
+	}
 
-	outputBuffer[pixel_index + 0] = ir;
-	outputBuffer[pixel_index + 1] = ig;
-	outputBuffer[pixel_index + 2] = ib;
-	outputBuffer[pixel_index + 3] = 255;
+	color /= static_cast<float>(ns);
 
+	uint8_t ir = static_cast<uint8_t>(255.99f * color.x);
+	uint8_t ig = static_cast<uint8_t>(255.99f * color.y);
+	uint8_t ib = static_cast<uint8_t>(255.99f * color.z);
 
-	//int pixel_index = j * max_x * 4 + i * 4;
-
-	//deviceBuffer[pixel_index + 0] = static_cast<float>(i) / max_x;
-	//deviceBuffer[pixel_index + 1] = static_cast<float>(j) / max_y;
-	//deviceBuffer[pixel_index + 2] = 0.2;
-
-	//float r = deviceBuffer[pixel_index + 0];
-	//float g = deviceBuffer[pixel_index + 1];
-	//float b = deviceBuffer[pixel_index + 2];
-
-	//uint8_t ir = static_cast<uint8_t>(255.99f * r);
-	//uint8_t ig = static_cast<uint8_t>(255.99f * g);
-	//uint8_t ib = static_cast<uint8_t>(255.99f * b);
-
-	//outputBuffer[pixel_index + 0] = ir;
-	//outputBuffer[pixel_index + 1] = ig;
-	//outputBuffer[pixel_index + 2] = ib;
-	//outputBuffer[pixel_index + 3] = 255;
+	outputBuffer[bufferIndex + 0] = ir;
+	outputBuffer[bufferIndex + 1] = ig;
+	outputBuffer[bufferIndex + 2] = ib;
+	outputBuffer[bufferIndex + 3] = 255;
 }
 
-__global__ void create_world(LaiEngine::GameObject **d_list, LaiEngine::GameObject **d_world)
+__global__ void create_world(LaiEngine::GameObject **d_list, LaiEngine::GameObject **d_world, LaiEngine::CUDA::Camera** d_camera)
 {
 	if (threadIdx.x == 0 && blockIdx.x == 0) 
 	{
 		*(d_list) = new LaiEngine::Sphere(glm::vec3(0, 0, -1), 0.5, nullptr);
 		*(d_list + 1) = new LaiEngine::Sphere(glm::vec3(0, -100.5, -1), 100, nullptr);
+
 		*d_world = new LaiEngine::GameObjectList(d_list, 2);
+		*d_camera = new LaiEngine::CUDA::Camera();
 	}
 }
 
 
-__global__ void free_world(LaiEngine::GameObject **d_list, LaiEngine::GameObject **d_world)
+__global__ void free_world(LaiEngine::GameObject **d_list, LaiEngine::GameObject **d_world, LaiEngine::CUDA::Camera** d_camera)
 {
 	delete *(d_list);
 	delete *(d_list + 1);
 	delete *d_world;
+	delete *d_camera;
 }
 
 
 // Helper function for using CUDA to add vectors in parallel.
 
+void InitCuda(int nx, int ny, int tx, int ty)
+{
+	clock_t start, stop;
+
+	dim3 blocks(nx / tx + 1, ny / ty + 1);
+	dim3 threads(tx, ty);
+
+	// allocate random state
+	curandState *d_randState;
+	checkCudaErrors(cudaMalloc((void **)&d_randState, nx * ny * sizeof(curandState)));
+
+	start = clock();
+	render_init << <blocks, threads >> > (nx, ny, d_randState);
+	checkCudaErrors(cudaGetLastError());
+	checkCudaErrors(cudaDeviceSynchronize());
+
+	stop = clock();
+	double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
+	std::cerr << "took " << timer_seconds << " seconds.\n";
+
+}
+
 
 void RenderWithCuda(uint8_t* outputBuffer, const size_t buffer_size, int nx, int ny, int tx, int ty)
 {
+	clock_t start, stop;
+
 	dim3 blocks(nx / tx + 1, ny / ty + 1);
 	dim3 threads(tx, ty);
 
@@ -147,9 +162,15 @@ void RenderWithCuda(uint8_t* outputBuffer, const size_t buffer_size, int nx, int
 	// allocate random state
 	curandState *d_randState;
 	checkCudaErrors(cudaMalloc((void **)&d_randState, nx * ny * sizeof(curandState)));
+
+	start = clock();
 	render_init << <blocks, threads >> > (nx, ny, d_randState);
 	checkCudaErrors(cudaGetLastError());
 	checkCudaErrors(cudaDeviceSynchronize());
+
+	stop = clock();
+	double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
+	std::cerr << "took " << timer_seconds << " seconds.\n";
 
 
 	// allocate device buffer
@@ -161,27 +182,33 @@ void RenderWithCuda(uint8_t* outputBuffer, const size_t buffer_size, int nx, int
 	checkCudaErrors(cudaMalloc((void **)&d_List, 2 * sizeof(LaiEngine::GameObject* )));
 	LaiEngine::GameObject **d_World;
 	checkCudaErrors(cudaMalloc((void **)&d_World, sizeof(LaiEngine::GameObject* )));
+	LaiEngine::CUDA::Camera **d_Camera;
+	checkCudaErrors(cudaMalloc((void **)&d_Camera, sizeof(LaiEngine::CUDA::Camera* )));
 
-	create_world << < 1, 1 >> > (d_List, d_World);
+
+	create_world << <1, 1>> > (d_List, d_World, d_Camera);
 	checkCudaErrors(cudaGetLastError());
 	checkCudaErrors(cudaDeviceSynchronize());
 
 
-	clock_t start, stop;
-	start = clock();
-	render<<< blocks, threads >>>(deviceBuffer, nx, ny, d_World);
+	constexpr int ns = 10; 
 
+	start = clock();
+	render<<< blocks, threads >>>(deviceBuffer, nx, ny, ns, d_Camera, d_World, d_randState);
+	checkCudaErrors(cudaGetLastError());
+	checkCudaErrors(cudaDeviceSynchronize());
 	stop = clock();
-	double timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
+	timer_seconds = ((double)(stop - start)) / CLOCKS_PER_SEC;
 	std::cerr << "took " << timer_seconds << " seconds.\n";
 
 
 	checkCudaErrors(cudaMemcpy(outputBuffer, deviceBuffer, buffer_size, cudaMemcpyDeviceToHost));
-
-	checkCudaErrors(cudaDeviceSynchronize());
-	free_world << <1, 1 >> > (d_List, d_World);
-
 	checkCudaErrors(cudaGetLastError());
+	checkCudaErrors(cudaDeviceSynchronize());
+
+	free_world << <1, 1>> > (d_List, d_World, d_Camera);
+	checkCudaErrors(cudaGetLastError());
+	checkCudaErrors(cudaDeviceSynchronize());
 
 	checkCudaErrors(cudaFree(d_randState));
 	checkCudaErrors(cudaFree(d_List));

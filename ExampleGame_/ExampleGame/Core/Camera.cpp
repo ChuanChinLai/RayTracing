@@ -4,7 +4,7 @@
 
 LaiEngine::Camera::Camera()
 {
-	Position = glm::vec3(0, 2, 5);
+	Position = glm::vec3(0, 0, 0);
 	m_ProjectedMatrix = MakeProjectionMatrix();
 }
 

@@ -69,7 +69,7 @@ bool LaiEngine::Engine::InitGL(const std::string & title)
 	try
 	{
 		sf::String sf_title(title.c_str());
-		mRenderWindow->create({ 800, 800 }, sf_title, sf::Style::Close, settings);
+		mRenderWindow->create({ 500, 500 }, sf_title, sf::Style::Close, settings);
 
 		GLenum error = glewInit();
 		if (GLEW_OK != error)

@@ -21,9 +21,7 @@ namespace LaiEngine
 
 		Ray GetRay(float u, float v);
 
-
 		glm::vec3 Velocity; 
-
 		glm::vec3 Position;
 		glm::vec3 Rotation;
 
@@ -33,4 +31,24 @@ namespace LaiEngine
 		glm::mat4 m_ViewMatrix;
 		glm::mat4 m_ProjectedViewMatrx;
 	};
+
+
+	namespace CUDA
+	{
+		class Camera
+		{
+		public:
+			__device__ Camera() 
+			{
+
+			};
+
+			__device__ Ray GetRay(float u, float v)
+			{
+				return LaiEngine::Ray(Position, glm::vec3(-1, -1, -1) + u * glm::vec3(2, 0, 0) + v * glm::vec3(0, 2, 0) - Position);
+			}
+
+			glm::vec3 Position;
+		};
+	}
 }
