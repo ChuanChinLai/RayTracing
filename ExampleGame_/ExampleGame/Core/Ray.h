@@ -7,8 +7,6 @@
 
 namespace LaiEngine
 {
-	class GameObject;
-
 	class Ray
 	{
 	public:
@@ -19,7 +17,7 @@ namespace LaiEngine
 
 		__device__ Ray(const glm::vec3& origin, const glm::vec3& direction) : Origin(origin), Direction(glm::normalize(direction)) { };
 
-		__device__ glm::vec3 GetPointAt(float t) const { return Origin + t * Direction; } ;
+		__device__ inline glm::vec3 GetPointAt(float t) const { return Origin + t * Direction; } ;
 
 		glm::vec3 Origin;
 		glm::vec3 Direction;

@@ -34,5 +34,5 @@ const glm::mat4& LaiEngine::Camera::GetProjectedViewMatrix() const noexcept
 
 LaiEngine::Ray LaiEngine::Camera::GetRay(float u, float v)
 {
-	return Ray(Position, glm::vec3(-2, -1, -1) + u * glm::vec3(2, 0, 0) + v * glm::vec3(0, 2, 0));
+	return Ray(Position, glm::vec3(-2, -1, -1) + u * glm::vec3(4, 0, 0) + v * glm::vec3(0, 2, 0));
 }

@@ -7,7 +7,6 @@
 
 #include <Core/Camera.h>
 #include <Core/Ray.h>
-#include <Core/Utility.h>
 
 #include <Material/Material.h>
 

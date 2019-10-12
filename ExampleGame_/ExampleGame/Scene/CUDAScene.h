@@ -2,8 +2,12 @@
 
 #include <Engine/Scene/IGameScene.h>
 #include <Engine/Model/Model.h>
+#include <Core/Camera.h>
 
+#include <CUDA/curand.h>
+#include <CUDA/curand_kernel.h>
 #include <SFML/Graphics.hpp>
+
 
 namespace LaiEngine
 {
@@ -23,11 +27,22 @@ namespace LaiEngine
 
 	private:
 
-		//bool KeyboardInput(std::weak_ptr<sf::RenderWindow> window);
-		//bool MouseInput(std::weak_ptr<sf::RenderWindow> window);
+		bool KeyboardInput(std::weak_ptr<sf::RenderWindow> window);
+		bool MouseInput(std::weak_ptr<sf::RenderWindow> window);
+
+		Camera mCamera;
+
+		int nx = 800;
+		int ny = 800;
+
+		uint8_t* textureBuffer = nullptr;
+		curandState* randBuffer = nullptr;
+
 
 		sf::Image image;
 		sf::Sprite sprite;
 		sf::Texture texture;
+
+		bool mGetInputs = false;
 	};
 }

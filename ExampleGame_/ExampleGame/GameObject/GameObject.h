@@ -1,7 +1,6 @@
 #pragma once
 
 #include <Core/Ray.h>
-#include <Core/Utility.h>
 
 #include <CUDA/cuda_runtime.h>
 #include <glm/vec3.hpp>
@@ -11,6 +10,20 @@
 namespace LaiEngine
 {
 	class Material;
+
+	namespace Util
+	{
+		struct ShadeRec
+		{
+			glm::vec3 p;
+			glm::vec3 normal;
+
+			float t;
+
+			Material* pMaterial;
+		};
+	}
+
 
 	class GameObject 
 	{

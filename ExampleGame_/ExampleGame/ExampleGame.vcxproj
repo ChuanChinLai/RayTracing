@@ -220,9 +220,7 @@
   <ItemGroup>
     <ClCompile Include="Core\Camera.cpp" />
     <ClCompile Include="Core\GameEngine.cpp" />
-    <ClCompile Include="Core\Utility.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Material\Material.cpp" />
     <ClCompile Include="Scene\CUDAScene.cpp" />
     <ClCompile Include="Scene\ExampleScene.cpp" />
     <ClCompile Include="Shader\BasicShader.cpp" />
@@ -232,10 +230,12 @@
     <ClInclude Include="Core\Camera.h" />
     <ClInclude Include="Core\GameEngine.h" />
     <ClInclude Include="Core\Ray.h" />
-    <ClInclude Include="Core\Utility.h" />
+    <ClInclude Include="Core\Util.h" />
     <ClInclude Include="CUDA\kernel.cuh" />
     <ClInclude Include="GameObject\GameObject.h" />
-    <CudaCompile Include="CUDA\kernel.cu" />
+    <CudaCompile Include="CUDA\kernel.cu">
+      <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
+    </CudaCompile>
     <CudaCompile Include="GameObject\Sphere.h" />
     <ClInclude Include="Material\Material.h" />
     <ClInclude Include="Scene\CUDAScene.h" />

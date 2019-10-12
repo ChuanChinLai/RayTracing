@@ -43,9 +43,10 @@ namespace LaiEngine
 
 			};
 
-			__device__ Ray GetRay(float u, float v)
+			__device__ inline Ray GetRay(float u, float v)
 			{
-				return LaiEngine::Ray(Position, glm::vec3(-1, -1, -1) + u * glm::vec3(2, 0, 0) + v * glm::vec3(0, 2, 0) - Position);
+				//return LaiEngine::Ray();
+				return LaiEngine::Ray(Position, glm::vec3(-2, -1, -1) + u * glm::vec3(4, 0, 0) + v * glm::vec3(0, 4, 0) - Position);
 			}
 
 			glm::vec3 Position;
