@@ -32,6 +32,8 @@ namespace LaiEngine
 
 		Camera mCamera;
 
+		CUDA::Camera cc;
+
 		int nx = 800;
 		int ny = 800;
 

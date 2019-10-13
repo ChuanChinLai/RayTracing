@@ -12,6 +12,16 @@ namespace LaiEngine
 	class Ray;
 	class GameObject;
 
+	class CUDAExample
+	{
+	public:
+		void Init();
+		void Update();
+		void Free();
+	private:
+	};
+
+
 	namespace CUDA
 	{
 		class Camera;
@@ -34,4 +44,5 @@ namespace LaiEngine
 
 		__global__ void Render(uint8_t* outputBuffer, int max_x, int max_y, int ns, LaiEngine::CUDA::Camera** camera, LaiEngine::GameObject** world, curandState* randState);
 	}
+
 }

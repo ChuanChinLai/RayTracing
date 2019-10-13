@@ -33,6 +33,17 @@ void check_cuda(cudaError_t result, char const *const func, const char *const fi
 	}
 }
 
+void LaiEngine::CUDAExample::Init()
+{
+}
+void LaiEngine::CUDAExample::Update()
+{
+}
+void LaiEngine::CUDAExample::Free()
+{
+}
+
+
 
 
 void LaiEngine::CUDA::Init(curandState* outputBuffer, const size_t bufferSize, int nx, int ny, int tx, int ty)

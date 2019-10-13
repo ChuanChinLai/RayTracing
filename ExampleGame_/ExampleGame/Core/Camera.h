@@ -50,6 +50,13 @@ namespace LaiEngine
 			}
 
 			glm::vec3 Position;
+			glm::vec3 Velocity;
+			glm::vec3 Rotation;
+		private:
+
+			glm::mat4 m_ProjectedMatrix;
+			glm::mat4 m_ViewMatrix;
+			glm::mat4 m_ProjectedViewMatrx;
 		};
 	}
 }

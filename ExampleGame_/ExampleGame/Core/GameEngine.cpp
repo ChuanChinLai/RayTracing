@@ -13,7 +13,7 @@ LaiEngine::GameEngine::GameEngine(const std::string & title) : Engine(title)
 
 bool LaiEngine::GameEngine::Init()
 {
-	std::shared_ptr<CUDAScene> scene = std::make_shared<CUDAScene>(*mSceneManager);
+	std::shared_ptr<ExampleScene> scene = std::make_shared<ExampleScene>(*mSceneManager);
 	mSceneManager->SetGameScene(scene);
 
 	return true;
