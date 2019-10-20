@@ -14,18 +14,15 @@ LaiEngine::CUDAScene::~CUDAScene()
 
 void LaiEngine::CUDAScene::Init()
 {
-	const size_t rand_buffer_size = nx * ny * sizeof(curandState);
-	curandState* randBuffer = new curandState[rand_buffer_size];
-	CUDA::Init(randBuffer, rand_buffer_size, nx, ny, 16, 16);
-
+	example.Init(nx, ny, 16, 16);
 
 	constexpr size_t size_rgba = 4;
 	const size_t buffer_size = nx * ny * size_rgba;
 
 	textureBuffer = new uint8_t[buffer_size];
 
-	constexpr int ns = 5;
-	CUDA::Update(textureBuffer, randBuffer, nx, ny, ns, 16, 16);
+	constexpr int ns = 50;
+	example.Update(textureBuffer, randBuffer, nx, ny, ns, 16, 16);
 	
 	this->image.create(nx, ny, sf::Color::White);
 	this->texture.create(nx, ny);
@@ -39,6 +36,8 @@ void LaiEngine::CUDAScene::Update(const float dt)
 
 void LaiEngine::CUDAScene::Release()
 {
+	example.Free();
+
 	if (textureBuffer != nullptr)
 	{
 		delete[] textureBuffer;

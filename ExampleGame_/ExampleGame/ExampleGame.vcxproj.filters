@@ -75,12 +75,18 @@
     <ClInclude Include="Core\Util.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="CUDA\CUDAExample.h">
+      <Filter>CUDA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CudaCompile Include="GameObject\Sphere.h">
       <Filter>GameObject</Filter>
     </CudaCompile>
     <CudaCompile Include="CUDA\kernel.cu">
+      <Filter>CUDA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="CUDA\CUDAExample.cu">
       <Filter>CUDA</Filter>
     </CudaCompile>
   </ItemGroup>

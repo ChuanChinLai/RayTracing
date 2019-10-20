@@ -231,8 +231,10 @@
     <ClInclude Include="Core\GameEngine.h" />
     <ClInclude Include="Core\Ray.h" />
     <ClInclude Include="Core\Util.h" />
+    <ClInclude Include="CUDA\CUDAExample.h" />
     <ClInclude Include="CUDA\kernel.cuh" />
     <ClInclude Include="GameObject\GameObject.h" />
+    <CudaCompile Include="CUDA\CUDAExample.cu" />
     <CudaCompile Include="CUDA\kernel.cu">
       <TargetMachinePlatform Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">64</TargetMachinePlatform>
     </CudaCompile>
