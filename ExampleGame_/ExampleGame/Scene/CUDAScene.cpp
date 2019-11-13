@@ -1,7 +1,7 @@
 #include "CUDAScene.h"
 
 #include <ExampleGame/CUDA/kernel.cuh>
-
+#include <iostream>
 
 LaiEngine::CUDAScene::CUDAScene(const SceneManager & sceneManager) : IGameScene(sceneManager)
 {
@@ -14,34 +14,51 @@ LaiEngine::CUDAScene::~CUDAScene()
 
 void LaiEngine::CUDAScene::Init()
 {
-	example.Init(nx, ny, 16, 16);
+	int tx = 16;
+	int ty = 16;
+
+
+	example.Init(nx, ny, tx, ty);
 
 	constexpr size_t size_rgba = 4;
 	const size_t buffer_size = nx * ny * size_rgba;
 
-	textureBuffer = new uint8_t[buffer_size];
+	//textureBuffer = new uint8_t[buffer_size];
+	cudaMallocHost((void**)&textureBuffer, buffer_size);
 
-	constexpr int ns = 50;
-	example.Update(textureBuffer, randBuffer, nx, ny, ns, 16, 16);
-	
+
 	this->image.create(nx, ny, sf::Color::White);
 	this->texture.create(nx, ny);
-	this->texture.update(textureBuffer);
-	this->sprite.setTexture(this->texture);
+
 }
 
 void LaiEngine::CUDAScene::Update(const float dt)
 {
+	static sf::Clock clock;
+
+	int tx = 16;
+	int ty = 16;
+	constexpr int ns = 50;
+
+	example.Update(textureBuffer, nx, ny, ns, tx, ty);
+	this->texture.update(textureBuffer);
+	this->sprite.setTexture(this->texture);
+
+
+	float currentTime = clock.restart().asSeconds();
+	float fps = 1.f / (currentTime);
+	std::cout << fps << std::endl;
 }
 
 void LaiEngine::CUDAScene::Release()
 {
+	cudaFreeHost(textureBuffer);
 	example.Free();
 
-	if (textureBuffer != nullptr)
-	{
-		delete[] textureBuffer;
-	}
+	//if (textureBuffer != nullptr)
+	//{
+	//	delete[] textureBuffer;
+	//}
 }
 
 void LaiEngine::CUDAScene::Draw(std::weak_ptr<sf::RenderWindow> window)

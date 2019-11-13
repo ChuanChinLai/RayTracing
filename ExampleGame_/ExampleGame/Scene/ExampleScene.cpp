@@ -188,7 +188,7 @@ bool LaiEngine::ExampleScene::MouseInput(std::weak_ptr<sf::RenderWindow> window)
 	auto cx = static_cast<int>(window.lock()->getSize().x / 2);
 	auto cy = static_cast<int>(window.lock()->getSize().y / 2);
 
-	sf::Mouse::setPosition({ cx, cy }, *window.lock());
+	//sf::Mouse::setPosition({ cx, cy }, *window.lock());
 
 	lastMousePosition = sf::Mouse::getPosition();
 

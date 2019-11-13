@@ -30,6 +30,7 @@ void LaiEngine::GameEngine::HandleEvents(sf::Event & event)
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
+		std::cout << "ESC" << std::endl;
 		mIsGameRunning = false;
 	}
 

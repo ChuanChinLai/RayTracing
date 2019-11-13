@@ -23,14 +23,16 @@ namespace LaiEngine
 		{
 		public:
 			void Init(int nx, int ny, int tx, int ty);
-			void Update(uint8_t* outputBuffer, curandState* randBuffer, int nx, int ny, int ns, int tx, int ty);
+			void Update(uint8_t* outputBuffer, int nx, int ny, int ns, int tx, int ty);
 			void Free();
 
 		private:
 
+			void InitTextureBuffer(const int nx, const int ny);
 			void InitRandState(const int nx, const int ny, const int tx, const int ty);
 			void InitWorld();
 
+			uint8_t* deviceTextureBuffer;
 			curandState* randState;
 
 			LaiEngine::GameObject ** gameobjects;

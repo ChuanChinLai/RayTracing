@@ -31,21 +31,21 @@ void LaiEngine::Engine::GameLoop()
 {
 	mIsGameRunning = mRenderWindow->isOpen();
 
-	sf::Clock clock;
-	sf::Time accumulator = sf::Time::Zero;
-	sf::Time ups = sf::seconds(1.f / 60.f);
+	//sf::Clock clock;
+	//sf::Time accumulator = sf::Time::Zero;
+	//sf::Time ups = sf::seconds(1.f / 60.f);
 
 
 	while (mIsGameRunning)
 	{
 		sf::Event event;
 
-		while (accumulator > ups)
+		//while (accumulator > ups)
 		{
-			mSceneManager->Update(ups.asSeconds());
+			mSceneManager->Update(0.0f);
 			mSceneManager->InputProcess(mRenderWindow, event);
 
-			accumulator -= ups;
+			//accumulator -= ups;
 		}
 
 
@@ -53,7 +53,7 @@ void LaiEngine::Engine::GameLoop()
 		mRenderWindow->display();
 
 		HandleEvents(event);
-		accumulator += clock.restart();
+		//accumulator += clock.restart();
 	}
 }
 
@@ -69,7 +69,7 @@ bool LaiEngine::Engine::InitGL(const std::string & title)
 	try
 	{
 		sf::String sf_title(title.c_str());
-		mRenderWindow->create({ 600, 600 }, sf_title, sf::Style::Close, settings);
+		mRenderWindow->create({ 800, 800 }, sf_title, sf::Style::Close, settings);
 
 		GLenum error = glewInit();
 		if (GLEW_OK != error)

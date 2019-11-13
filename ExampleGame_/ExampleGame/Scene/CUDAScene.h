@@ -40,12 +40,10 @@ namespace LaiEngine
 
 		CUDA::Camera cc;
 
-		int nx = 600;
-		int ny = 600;
+		int nx = 800;
+		int ny = 800;
 
 		uint8_t* textureBuffer = nullptr;
-		curandState* randBuffer = nullptr;
-
 
 		sf::Image image;
 		sf::Sprite sprite;
